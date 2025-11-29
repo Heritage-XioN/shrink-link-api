@@ -1,0 +1,6 @@
+{
+    "editor.formatOnSave": true,
+    "files.autoSave": "off",
+    "editor.formatOnPaste": true,
+    "editor.defaultFormatter": "ms-python.autopep8"
+}
