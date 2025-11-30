@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.database import engine, SQLModel
-from app.controllers import auth_controller, urls_controller
+from app.controllers import auth_controller, urls_controller, user_controller
 
 # alembic is handling the creation of the DB tables
 # so you can leave this commmented out
@@ -28,6 +28,7 @@ app.add_middleware(
 # routes
 app.include_router(auth_controller.router)
 app.include_router(urls_controller.router)
+app.include_router(user_controller.router)
 
 
 # root

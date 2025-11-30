@@ -60,5 +60,6 @@ async def get_users(db:Session):
         select(User).options(selectinload(User.urls))).all() # type: ignore
     return user_query
 
-async def get_user_url():
-    return
+async def get_user_with_urls(id, db: Session):
+    user_query = db.exec(select(User).where(User.id == id).options(selectinload(User.urls))).first() # type: ignore
+    return user_query
