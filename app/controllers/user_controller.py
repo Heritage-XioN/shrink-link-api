@@ -25,3 +25,11 @@ async def get_logged_in_user(user: Annotated[User, Depends(get_current_user)]):
     if not user:
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "user not authenticated")
     return user
+
+@router.get("/user", status_code=status.HTTP_200_OK, response_model=List[UserResponse])
+async def get_all_users(db: Annotated[Session, Depends(get_session)]):
+    return  await get_users(db)
+
+@router.get("/user/{user_id}", status_code=status.HTTP_200_OK, response_model=UserResponse)
+async def get_user(user_id, db: Annotated[Session, Depends(get_session)]):
+    return  await get_user_with_urls(user_id, db)
