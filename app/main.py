@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.database import engine, SQLModel
-from app.controllers import auth_controller, urls_controller, user_controller
+from app.controllers import auth_controller, redirect_controller, urls_controller, user_controller
 
 
 # Note: im really good with naming
@@ -35,6 +35,7 @@ app.add_middleware(
 app.include_router(auth_controller.router)
 app.include_router(urls_controller.router)
 app.include_router(user_controller.router)
+app.include_router(redirect_controller.router)
 
 
 # root

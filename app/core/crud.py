@@ -1,5 +1,6 @@
 from typing import Annotated, List, Optional
 from fastapi import APIRouter, Depends, FastAPI, Response, status, HTTPException
+from sqlalchemy import true
 from sqlmodel import Session, select
 from sqlalchemy.orm import selectinload
 from app.core.database import get_session
@@ -11,6 +12,7 @@ from app.schemas.user import Get_current_user, UserResponse
 from app.models.user import User
 from app.utils.helpers import hash
 from app.services.urlshortener import url_shortener
+from app.core.config import settings
 
 
 
@@ -23,8 +25,7 @@ async def user_url_linker(url: Urls, db: Session, user: User):
         user_id=user.id, url_id=url_query.id, created_at=None)  # type: ignore
     db.add(user_url_link)
     db.commit()
-    db.refresh(user_url_link)
-    return user_url_link
+    return True
 
 async def verify_user_url_link(url: Urls, db: Session, user: User):
     """this logic verifies if the user is linked to a url"""
@@ -45,16 +46,17 @@ async def shorten(url: Urls, db: Session,  user: User):
     if url_query:
         if not await verify_user_url_link(url, db, user):
             await user_url_linker(url_query, db, user)
-        return url_query
+        return {"message": "success"}
 
     long_url = url.original_url
     short_url = url_shortener.shorten_url(long_url)
-    url.Shortened_url = short_url
+    url.Shortened_url = f"{settings.BACKEND_URL}/r/{short_url}"
+    print(url)
     db.add(url)
     db.commit()
-    relationship = await user_url_linker(url, db, user)
+    await user_url_linker(url, db, user)
     db.refresh(url)
-    return (url, relationship)
+    return {"message": "success"}
 
 
 async def get_urls(db:Session):
@@ -70,6 +72,11 @@ async def get_url_with_users(id: int, db: Session):
 
 async def get_all_urls_for_user():
     return
+
+async def redirct_details(url: str, db: Session):
+    url_query = db.exec(
+        select(Urls).where(Urls.Shortened_url == url)).first()
+    return url_query
 
 
 # user related CRUD operations

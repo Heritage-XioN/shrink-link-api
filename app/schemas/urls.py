@@ -26,3 +26,14 @@ class Urls_response(SQLModel):
     class Config:
         from_attributes = True
 
+class redirct_response(SQLModel):
+    message: str
+
+    class Config:
+        from_attributes = True
+
+class shortener_response(SQLModel):
+    message: str
+
+    class Config:
+        from_attributes = True

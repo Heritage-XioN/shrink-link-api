@@ -1,11 +1,11 @@
 from typing import Annotated, List
 from fastapi import APIRouter, Depends,status
 from sqlmodel import Session
-from app.core.crud import get_url_with_users, get_urls, shorten
+from app.core.crud import get_url_with_users, get_urls, redirct_details, shorten
 from app.core.database import get_session
 from app.core.security import get_current_user
 from app.models.urls import Urls
-from app.schemas.urls import Urls_response
+from app.schemas.urls import Urls_response, shortener_response
 from app.models.user import User
 
 router = APIRouter(
@@ -13,7 +13,7 @@ router = APIRouter(
     tags=["url"]
 )
 
-@router.post("/", status_code=status.HTTP_201_CREATED)
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=shortener_response)
 async def shorten_url(url: Urls, db: Annotated[Session, Depends(get_session)],  user: Annotated[User, Depends(get_current_user)]):
     return await shorten(url, db, user)
 
@@ -24,6 +24,7 @@ async def get_all_urls(db: Annotated[Session, Depends(get_session)]):
 @router.get("/{url_id}", status_code=status.HTTP_200_OK, response_model=Urls_response)
 async def get_user(url_id: int, db: Annotated[Session, Depends(get_session)]):
     return  await get_url_with_users(url_id, db)
+
 
 
 
