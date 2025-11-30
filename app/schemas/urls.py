@@ -1,12 +1,28 @@
 from datetime import datetime
+from typing import List
+from pydantic import EmailStr
 from sqlmodel import SQLModel
+
+
+
+class Urls_base(SQLModel):
+    id: int
+    original_url: str
+    Shortened_url: str
+
+class Url_Users(SQLModel):
+    id: int
+    email: EmailStr
+    created_at: datetime
+
+
 
 class Urls_response(SQLModel):
     id: int
     original_url: str
-    short_url: str
-    user_id: int
-    created_at: datetime
+    Shortened_url: str
+    users: List[Url_Users] = []
 
-class Urls_base(SQLModel):
-    original_url: str
+    class Config:
+        from_attributes = True
+
