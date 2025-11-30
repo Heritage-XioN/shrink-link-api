@@ -13,7 +13,21 @@ from app.utils.helpers import hash
 from app.services.urlshortener import url_shortener
 
 
+
+
+async def user_url_linker(url: Urls, db: Session, user: User):
+    """logic for linking the user and the url. this facilitates the many to many relationship"""
+    url_query = db.exec(select(Urls).where(
+        Urls.original_url == url.original_url)).first()
+    user_url_link = UserURLLink(
+        user_id=user.id, url_id=url_query.id, created_at=None)  # type: ignore
+    db.add(user_url_link)
+    db.commit()
+    db.refresh(user_url_link)
+    return user_url_link
+
 async def verify_user_url_link(url: Urls, db: Session, user: User):
+    """this logic verifies if the user is linked to a url"""
     url_query = db.exec(select(Urls).where(
         Urls.original_url == url.original_url)).first()
     association_query = db.exec(select(UserURLLink).where(UserURLLink.user_id == user.id,
@@ -22,7 +36,10 @@ async def verify_user_url_link(url: Urls, db: Session, user: User):
         return association_query
     return False
 
+# url related CRUD operations
+
 async def shorten(url: Urls, db: Session,  user: User):
+    """logic for shortening urls"""
     url_query = db.exec(select(Urls).where(
         Urls.original_url == url.original_url)).first()
     if url_query:
@@ -40,30 +57,32 @@ async def shorten(url: Urls, db: Session,  user: User):
     return (url, relationship)
 
 
-async def user_url_linker(url: Urls, db: Session, user: User):
-    url_query = db.exec(select(Urls).where(
-        Urls.original_url == url.original_url)).first()
-    user_url_link = UserURLLink(
-        user_id=user.id, url_id=url_query.id, created_at=None)  # type: ignore
-    db.add(user_url_link)
-    db.commit()
-    db.refresh(user_url_link)
-    return user_url_link
-
 async def get_urls(db:Session):
+    """logic for getting all urls and all associated users eho shortened them"""
     url_query = db.exec(
         select(Urls).options(selectinload(Urls.users))).all() # type: ignore
     return url_query
 
+async def get_url_with_users(id: int, db: Session):
+    """logic for getting a url and all associated users who shortened the Oringinal url"""
+    url_query = db.exec(select(Urls).where(Urls.id == id).options(selectinload(Urls.users))).first() # type: ignore
+    return url_query
+
+async def get_all_urls_for_user():
+    return
+
+
+# user related CRUD operations
+
 async def get_users(db:Session):
+    """logic for getting all user and all associated urls which they shortened"""
     user_query = db.exec(
         select(User).options(selectinload(User.urls))).all() # type: ignore
     return user_query
 
-async def get_user_with_urls(id, db: Session):
+async def get_user_with_urls(id: int, db: Session):
+    """logic for getting a user and all associated urls which they shortened"""
     user_query = db.exec(select(User).where(User.id == id).options(selectinload(User.urls))).first() # type: ignore
     return user_query
 
-async def get_url_with_users(id: int, db: Session):
-    url_query = db.exec(select(Urls).where(Urls.id == id).options(selectinload(Urls.users))).first() # type: ignore
-    return url_query
+

@@ -15,7 +15,8 @@ class Urls(SQLModel, table=True):
     clicks: Optional[str]
     created_at: datetime = Field(sa_column=Column(
         TIMESTAMP(timezone=True), nullable=False, server_default=text("now()")))
-
+    
+    #TODO: implement proper type safety with annonated
     users: List["User"] = Relationship(  # type: ignore
         back_populates="urls", link_model=UserURLLink)
     # users_link: List["UserURLLink"] = Relationship(back_populates="urls")

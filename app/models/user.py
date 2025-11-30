@@ -14,7 +14,8 @@ class User(SQLModel, table=True):
     password: str
     created_at: datetime = Field(sa_column=Column(
         TIMESTAMP(timezone=True), nullable=False, server_default=text("now()")))
-
+    
+    #TODO: implement proper type safety with annonated
     urls: List["Urls"] = Relationship(  # type: ignore
         back_populates="users", link_model=UserURLLink)
     # urls_link: List["UserURLLink"] = Relationship(back_populates="User")
