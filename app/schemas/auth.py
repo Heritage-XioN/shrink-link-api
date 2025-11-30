@@ -1,8 +1,6 @@
-from datetime import datetime
-from email import message
 from pydantic import EmailStr
 from sqlmodel import SQLModel
-from app.schemas.user import UserBase
+
 
 
 # schema for login response

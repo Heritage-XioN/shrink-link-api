@@ -3,7 +3,6 @@ from typing import List, Optional
 from pydantic import UUID1, EmailStr
 from sqlalchemy import TIMESTAMP, Column, Integer, String, Uuid
 from sqlmodel import Field, Relationship, SQLModel, text
-from app.models.urls import Urls
 from app.models.user_url_link import UserURLLink
 
 
@@ -16,6 +15,6 @@ class User(SQLModel, table=True):
     created_at: datetime = Field(sa_column=Column(
         TIMESTAMP(timezone=True), nullable=False, server_default=text("now()")))
 
-    urls: List["Urls"] = Relationship(
-        back_populates="User", link_model=UserURLLink)
-    urls_link: List["UserURLLink"] = Relationship(back_populates="User")
+    urls: List["Urls"] = Relationship(  # type: ignore
+        back_populates="users", link_model=UserURLLink)
+    # urls_link: List["UserURLLink"] = Relationship(back_populates="User")

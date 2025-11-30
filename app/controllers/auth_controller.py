@@ -17,6 +17,8 @@ router = APIRouter(
 )
 
 # route for creating a user
+
+
 @router.post('/register', status_code=status.HTTP_201_CREATED, response_model=UserResponse)
 def create_user(user: User, db: Annotated[Session, Depends(get_session)]):
     hashed_password = hash(user.password)
@@ -48,7 +50,9 @@ def login(login_credentials: Annotated[OAuth2PasswordRequestForm, Depends()], db
     access_token = create_access_token(data={"user_id": user_query.id})
     return {"access_token": access_token, "token_type": "bearer"}
 
-#route for logging out
+# route for logging out
+
+
 @router.post("/logout")
 def logout():
     return

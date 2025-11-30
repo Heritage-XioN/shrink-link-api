@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.database import engine, SQLModel
-from app.api.v1.endpoints import auth
+from app.controllers import auth_controller, urls_controller
 
 # alembic is handling the creation of the DB tables
 # so you can leave this commmented out
@@ -15,7 +15,7 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
-#setup for cors
+# setup for cors
 origins = ["*"]
 app.add_middleware(
     CORSMiddleware,
@@ -25,17 +25,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-#routes
-app.include_router(auth.router)
+# routes
+app.include_router(auth_controller.router)
+app.include_router(urls_controller.router)
 
 
-
-# root 
+# root
 @app.get("/")
 def read_root():
     return {"message": "running"}
 
-# health check. might add something different later
+# health check.
+# might add something different later
+
+
 @app.get("/health")
 async def health_check():
     return {"status": "healthy", "version": "1.0.0"}
