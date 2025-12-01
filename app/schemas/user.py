@@ -27,6 +27,12 @@ class UserResponse(SQLModel):
     class Config:
         from_attributes = True
 
+class User_register_response(SQLModel):
+    status: str
+
+    class Config:
+        from_attributes = True
+
 
 class Get_current_user(UserBase):
     pass

@@ -51,7 +51,6 @@ async def shorten(url: Urls, db: Session,  user: User):
     long_url = url.original_url
     short_url = url_shortener.shorten_url(long_url)
     url.Shortened_url = f"{settings.BACKEND_URL}/r/{short_url}"
-    print(url)
     db.add(url)
     db.commit()
     await user_url_linker(url, db, user)

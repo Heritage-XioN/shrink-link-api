@@ -15,11 +15,15 @@ router = APIRouter(
     tags=["redirct"]
 )
 
-@router.get("/{short_url}", status_code=status.HTTP_308_PERMANENT_REDIRECT, response_model=redirct_response)
+@router.get("/{short_url}", status_code=status.HTTP_307_TEMPORARY_REDIRECT, response_model=redirct_response)
 async def get_redirect_details(short_url: str, db: Annotated[Session, Depends(get_session)], res: Response):
     complete_url = f"{settings.BACKEND_URL}/r/{short_url}"
     url_query = db.exec(select(Urls).where(
         Urls.Shortened_url == complete_url)).first()
+    increased_count = url_query.clicks + 1 # type: ignore
+    url_query.clicks = increased_count # type: ignore
+    db.add(url_query)
+    db.commit()
     original_url = url_query.original_url # type: ignore
     res.headers["Location"] = original_url
     return {"message": "suceess"}

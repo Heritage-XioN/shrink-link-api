@@ -12,7 +12,7 @@ class Urls(SQLModel, table=True):
                                                primary_key=True, nullable=False, index=True))
     original_url: str = Field(unique=True)
     Shortened_url: str
-    clicks: Optional[str]
+    clicks: Optional[int] = Field(sa_column=Column(Integer, default=0, nullable=False))
     created_at: datetime = Field(sa_column=Column(
         TIMESTAMP(timezone=True), nullable=False, server_default=text("now()")))
     

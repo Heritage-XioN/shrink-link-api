@@ -7,7 +7,7 @@ from app.core.security import create_access_token, get_current_user
 from app.models.user import User
 from app.schemas.auth import AuthResponse, Email_verif_res, LoginAuth
 from app.utils.helpers import verify
-from app.schemas.user import UserResponse
+from app.schemas.user import User_register_response, UserResponse
 from app.utils.helpers import hash
 
 
@@ -19,7 +19,7 @@ router = APIRouter(
 # route for creating a user
 
 
-@router.post('/register', status_code=status.HTTP_201_CREATED, response_model=UserResponse)
+@router.post('/register', status_code=status.HTTP_201_CREATED, response_model=User_register_response)
 def create_user(user: User, db: Annotated[Session, Depends(get_session)]):
     hashed_password = hash(user.password)
     user.password = hashed_password
