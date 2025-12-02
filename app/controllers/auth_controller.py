@@ -26,7 +26,7 @@ def create_user(user: User, db: Annotated[Session, Depends(get_session)]):
     user_query = db.exec(select(User).where(User.email == user.email)).first()
     if user_query:
         raise HTTPException(status.HTTP_403_FORBIDDEN,
-                            f"user with the email: {user.email} already exist pls login")
+                            f"user already exist pls login")
     db.add(user)
     db.commit()
     return {"status": "success"}
@@ -48,7 +48,7 @@ def login(login_credentials: Annotated[OAuth2PasswordRequestForm, Depends()], db
         raise HTTPException(status.HTTP_404_NOT_FOUND, f"Invalid credentials")
     # if all statement above evaluate withot exceptions then create auth token
     access_token = create_access_token(data={"user_id": user_query.id})
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {"status": "success", "access_token": access_token, "token_type": "bearer"}
 
 # route for logging out
 

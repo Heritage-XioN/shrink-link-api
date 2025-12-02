@@ -5,6 +5,7 @@ from sqlmodel import SQLModel
 
 # schema for login response
 class AuthResponse(SQLModel):
+    status: str
     access_token: str
     token_type: str
 
