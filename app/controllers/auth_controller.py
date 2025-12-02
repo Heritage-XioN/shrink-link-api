@@ -50,9 +50,3 @@ def login(login_credentials: Annotated[OAuth2PasswordRequestForm, Depends()], db
     access_token = create_access_token(data={"user_id": user_query.id})
     return {"status": "success", "access_token": access_token, "token_type": "bearer"}
 
-# route for logging out
-
-
-@router.post("/logout")
-def logout():
-    return
