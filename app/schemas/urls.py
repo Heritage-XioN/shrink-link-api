@@ -9,6 +9,10 @@ class Urls_base(SQLModel):
     id: int
     original_url: str
     Shortened_url: str
+    clicks: int
+    created_at: datetime
+    class Config:
+        from_attributes = True
 
 class Url_Users(SQLModel):
     id: int
@@ -19,9 +23,11 @@ class Url_Users(SQLModel):
 
 class Urls_response(SQLModel):
     id: int
+    user_id: int
     original_url: str
     Shortened_url: str
-    users: List[Url_Users] = []
+    clicks: int
+    created_at: datetime
 
     class Config:
         from_attributes = True
@@ -33,7 +39,12 @@ class redirct_response(SQLModel):
         from_attributes = True
 
 class shortener_response(SQLModel):
-    message: str
+    id: int
+    user_id: int
+    original_url: str
+    Shortened_url: str
+    clicks: int
+    created_at: datetime
 
     class Config:
         from_attributes = True

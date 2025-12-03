@@ -3,7 +3,6 @@ from sqlmodel import SQLModel, Session, create_engine, func, select, text, updat
 from sqlalchemy import event
 from app.models.user import User
 from app.models.urls import Urls
-from app.models.user_url_link import UserURLLink
 from app.core.config import settings
 from sqlalchemy.exc import SQLAlchemyError
 

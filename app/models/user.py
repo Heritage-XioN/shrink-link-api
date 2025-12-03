@@ -3,7 +3,7 @@ from typing import List, Optional
 from pydantic import UUID1, EmailStr
 from sqlalchemy import TIMESTAMP, Column, Integer, String, Uuid
 from sqlmodel import Field, Relationship, SQLModel, text
-from app.models.user_url_link import UserURLLink
+#from app.models.user_url_link import UserURLLink
 
 
 # user database model
@@ -16,6 +16,6 @@ class User(SQLModel, table=True):
         TIMESTAMP(timezone=True), nullable=False, server_default=text("now()")))
     
     #TODO: implement proper type safety with annonated
-    urls: List["Urls"] = Relationship(  # type: ignore
-        back_populates="users", link_model=UserURLLink)
+    # urls: List["Urls"] = Relationship(  # type: ignore
+    #     back_populates="users", link_model=UserURLLink)
     # urls_link: List["UserURLLink"] = Relationship(back_populates="User")

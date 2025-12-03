@@ -1,13 +1,9 @@
-from logging import config
-from typing import Annotated, List
+from typing import Annotated
 from fastapi import APIRouter, Depends, status, Response
 from sqlmodel import Session, select
-from app.core.crud import get_url_with_users, get_urls, redirct_details, shorten
 from app.core.database import get_session
-from app.core.security import get_current_user
 from app.models.urls import Urls
-from app.schemas.urls import Urls_response, redirct_response
-from app.models.user import User
+from app.schemas.urls import redirct_response
 from app.core.config import settings
 
 router = APIRouter(

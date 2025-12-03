@@ -1,13 +1,13 @@
 from typing import Annotated
-from fastapi import APIRouter, Depends, FastAPI, Response, status, HTTPException
+from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlmodel import Session, select
 from app.core.database import get_session
-from app.core.security import create_access_token, get_current_user
+from app.core.security import create_access_token
 from app.models.user import User
-from app.schemas.auth import AuthResponse, Email_verif_res, LoginAuth
+from app.schemas.auth import AuthResponse
 from app.utils.helpers import verify
-from app.schemas.user import User_register_response, UserResponse
+from app.schemas.user import User_register_response
 from app.utils.helpers import hash
 
 
@@ -48,5 +48,5 @@ def login(login_credentials: Annotated[OAuth2PasswordRequestForm, Depends()], db
         raise HTTPException(status.HTTP_404_NOT_FOUND, f"Invalid credentials")
     # if all statement above evaluate withot exceptions then create auth token
     access_token = create_access_token(data={"user_id": user_query.id})
-    return {"status": "success", "access_token": access_token, "token_type": "bearer"}
+    return {"status": "success", "access_token": access_token, "token_type": "Bearer"}
 
