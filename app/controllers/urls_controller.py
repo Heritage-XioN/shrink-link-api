@@ -17,7 +17,7 @@ router = APIRouter(
 async def shorten_url(url: Urls, db: Annotated[Session, Depends(get_session)],  user: Annotated[User, Depends(get_current_user)]):
     return await shorten(url, db, user)
 
-@router.get("/", status_code=status.HTTP_200_OK, response_model=List[Urls_base])
+@router.get("/", status_code=status.HTTP_200_OK, response_model=Optional[List[Urls_base]])
 async def get_limit_url(db: Annotated[Session, Depends(get_session)],  user: Annotated[User, Depends(get_current_user)],  limit: int = 3, skip: int = 0):
     return await get_limit_urls_for_user(db,user,limit,skip)
 

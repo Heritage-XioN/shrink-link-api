@@ -16,18 +16,17 @@ async def shorten(url: Urls, db: Session,  user: User):
     url_query = db.exec(select(Urls).where(
         Urls.original_url == url.original_url)).first()
     if url_query:
-        return url_query
+        return {"status": "success"}
     url.user_id = user.id
     long_url = url.original_url
     short_url = url_shortener.shorten_url(long_url)
     url.Shortened_url = f"{settings.BACKEND_URL}/r/{short_url}"
     db.add(url)
     db.commit()
-    db.refresh(url)
-    return url
+    return {"status": "success"}
 
 async def get_limit_urls_for_user(db: Session, user: User, limit: int, skip: int):
-    url_query = db.exec(select(Urls).where(Urls.user_id == user.id).limit(limit).offset(skip)).all() # type: ignore
+    url_query = db.exec(select(Urls).where(Urls.user_id == user.id).order_by(Urls.created_at.desc()).limit(limit).offset(skip)).all() # type: ignore
     if not url_query:
         return None
     return url_query
@@ -35,7 +34,7 @@ async def get_limit_urls_for_user(db: Session, user: User, limit: int, skip: int
 async def get_all_urls_for_user(db: Session, user: User, search: Optional[str]):
     url_query = db.exec(select(Urls).where(Urls.user_id == user.id).filter(Urls.original_url.contains(search))).all() # type: ignore
     if not url_query:
-        return None
+        raise HTTPException(status.HTTP_403_FORBIDDEN, f"url does not exists yet pls shorten")
     return url_query
 
 async def updated_url(db: Session, url_id: int, url: Urls):
