@@ -1,7 +1,7 @@
 from typing import Annotated, List, Optional
 from fastapi import APIRouter, Depends,status
 from sqlmodel import Session
-from app.core.crud import deleted_url, get_all_urls_for_user, get_limit_urls_for_user, shorten, updated_url
+from app.services.crud import deleted_url, get_all_urls_for_user, get_limit_urls_for_user, shorten, updated_url
 from app.core.database import get_session
 from app.core.security import get_current_user
 from app.models.urls import Urls
@@ -21,11 +21,9 @@ async def shorten_url(url: Urls, db: Annotated[Session, Depends(get_session)],  
 async def get_limit_url(db: Annotated[Session, Depends(get_session)],  user: Annotated[User, Depends(get_current_user)],  limit: int = 3, skip: int = 0):
     return await get_limit_urls_for_user(db,user,limit,skip)
 
-
 @router.get("/all", status_code=status.HTTP_200_OK, response_model=List[Urls_base])
 async def get_all_url(db: Annotated[Session, Depends(get_session)],  user: Annotated[User, Depends(get_current_user)], search: Optional[str] = ""):
     return await get_all_urls_for_user(db,user,search)
-
 
 @router.put("/{url_id}", status_code=status.HTTP_200_OK, response_model=Urls_response)
 async def update_url(url_id: int, url: Urls, db: Annotated[Session, Depends(get_session)], user: Annotated[User, Depends(get_current_user)]):

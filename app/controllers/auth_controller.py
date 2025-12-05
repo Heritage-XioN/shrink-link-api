@@ -25,8 +25,7 @@ def create_user(user: User, db: Annotated[Session, Depends(get_session)]):
     user.password = hashed_password
     user_query = db.exec(select(User).where(User.email == user.email)).first()
     if user_query:
-        raise HTTPException(status.HTTP_403_FORBIDDEN,
-                            f"user already exist pls login")
+        raise HTTPException(status.HTTP_403_FORBIDDEN, f"user already exist pls login")
     db.add(user)
     db.commit()
     return {"status": "success"}
@@ -41,8 +40,7 @@ def login(login_credentials: Annotated[OAuth2PasswordRequestForm, Depends()], db
         User.email == login_credentials.username)).first()
     # checks if the user exists
     if not user_query:
-        raise HTTPException(status.HTTP_403_FORBIDDEN,
-                            f"Invalid credentials")
+        raise HTTPException(status.HTTP_403_FORBIDDEN, f"Invalid credentials")
     # if the exist then check if they provided the correct password
     if not verify(login_credentials.password, user_query.password):
         raise HTTPException(status.HTTP_404_NOT_FOUND, f"Invalid credentials")

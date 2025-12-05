@@ -14,7 +14,7 @@ from app.core.config import settings
 async def shorten(url: Urls, db: Session,  user: User):
     """logic for shortening urls"""
     url_query = db.exec(select(Urls).where(
-        Urls.original_url == url.original_url)).first()
+        Urls.original_url == url.original_url, Urls.user_id == user.id)).first()
     if url_query:
         return {"status": "success"}
     url.user_id = user.id
