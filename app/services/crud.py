@@ -43,7 +43,7 @@ async def updated_url(db: Session, url_id: int, url: Urls):
     if not url_query:
         raise HTTPException(status.HTTP_403_FORBIDDEN, f"url with the id {url_id} does not exists")
     if url_check:
-        raise HTTPException(status.HTTP_403_FORBIDDEN, f"original url already exists")
+        raise HTTPException(status.HTTP_403_FORBIDDEN, f"url already exists")
     for field, value in url.model_dump().items():
         setattr(url_query, field, value)
     db.commit()
@@ -53,7 +53,7 @@ async def updated_url(db: Session, url_id: int, url: Urls):
 async def deleted_url(db: Session, url_id: int):
     url_query = db.get(Urls, url_id)
     if not url_query:
-        raise HTTPException(status.HTTP_403_FORBIDDEN, f"project with the id {url_id} does not exists")
+        raise HTTPException(status.HTTP_403_FORBIDDEN, f"url with the id {url_id} does not exists")
     db.delete(url_query)
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
