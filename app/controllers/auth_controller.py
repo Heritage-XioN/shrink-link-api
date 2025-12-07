@@ -43,7 +43,7 @@ def login(login_credentials: Annotated[OAuth2PasswordRequestForm, Depends()], db
         raise HTTPException(status.HTTP_403_FORBIDDEN, f"Invalid credentials")
     # if the exist then check if they provided the correct password
     if not verify(login_credentials.password, user_query.password):
-        raise HTTPException(status.HTTP_404_NOT_FOUND, f"Invalid credentials")
+        raise HTTPException(status.HTTP_403_FORBIDDEN, f"Invalid credentials")
     # if all statement above evaluate withot exceptions then create auth token
     access_token = create_access_token(data={"user_id": user_query.id})
     return {"status": "success", "access_token": access_token, "token_type": "Bearer"}
