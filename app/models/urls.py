@@ -11,6 +11,6 @@ class Urls(SQLModel, table=True):
     user_id: Optional[int] = Field(foreign_key="user.id", ondelete="CASCADE", nullable=False)
     original_url: str 
     Shortened_url: str
-    clicks: Optional[int] = Field(sa_column=Column(Integer, default=0, nullable=False))
+    clicks: Optional[int] = Field(sa_column=Column(Integer, server_default=text("0"), nullable=False))
     created_at: datetime = Field(sa_column=Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("now()")))
     
