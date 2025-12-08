@@ -9,8 +9,10 @@ router = APIRouter(
     tags=["user"]
 )
 
+# handles getting the logged in user
 @router.get("/logged_in", status_code=status.HTTP_200_OK, response_model=Get_current_user)
 async def get_logged_in_user(user: Annotated[User, Depends(get_current_user)]):
+    # returns a error if user is not logged in
     if not user:
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "user not authenticated")
     return user

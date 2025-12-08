@@ -17,8 +17,6 @@ router = APIRouter(
 )
 
 # route for creating a user
-
-
 @router.post('/register', status_code=status.HTTP_201_CREATED, response_model=User_register_response)
 def create_user(user: User, db: Annotated[Session, Depends(get_session)]):
     hashed_password = hash(user.password)

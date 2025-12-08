@@ -13,22 +13,27 @@ router = APIRouter(
     tags=["url"]
 )
 
+# handles shortening the url
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=shortener_response)
 async def shorten_url(url: Urls, db: Annotated[Session, Depends(get_session)],  user: Annotated[User, Depends(get_current_user)]):
     return await shorten(url, db, user)
 
+# handles getting the url with a limit of 3
 @router.get("/", status_code=status.HTTP_200_OK, response_model=Optional[List[Urls_base]])
 async def get_limit_url(db: Annotated[Session, Depends(get_session)],  user: Annotated[User, Depends(get_current_user)],  limit: int = 3, skip: int = 0):
     return await get_limit_urls_for_user(db,user,limit,skip)
 
+# handles getting all the urls
 @router.get("/all", status_code=status.HTTP_200_OK, response_model=List[Urls_base])
 async def get_all_url(db: Annotated[Session, Depends(get_session)],  user: Annotated[User, Depends(get_current_user)], search: Optional[str] = ""):
     return await get_all_urls_for_user(db,user,search)
 
+# handles updating the url
 @router.put("/{url_id}", status_code=status.HTTP_200_OK, response_model=Urls_response)
 async def update_url(url_id: int, url: Urls, db: Annotated[Session, Depends(get_session)], user: Annotated[User, Depends(get_current_user)]):
     return await updated_url(db, url_id, url)
 
+# handles deleting the url
 @router.delete("/{url_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_url(url_id: int, db: Annotated[Session, Depends(get_session)], user: Annotated[User, Depends(get_current_user)]):
     return  await deleted_url(db, url_id)
