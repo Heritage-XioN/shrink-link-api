@@ -14,7 +14,7 @@ jobs:
             DB_HOSTNAME: postgres
             DB_PORT: 5432
             DB_PASSWORD: heritage2001
-            DB_NAME: shrinklink_test
+            DB_NAME: shrinklink
             DB_USERNAME: postgres
             DB_DRIVER: postgresql
             SECRET_KEY: 8c749cf7f2b124d6805378792e330a7889887a30242056db3977f99a3fb51db5
