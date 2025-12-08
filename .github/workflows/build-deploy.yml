@@ -1,6 +1,8 @@
 name: Build and deploy shrinkLink api
 run-name: ${{ github.actor }} running production build for deployment
 on:
+    push:
+        branches: ["main"]
     pull_request:
         branches: ["main"]
 jobs:
@@ -16,14 +18,12 @@ jobs:
             ALGORITHM: HS256
             ACCESS_TOKEN_EXPIRE_MINUTES: 1440
             BACKEND_URL: http://localhost:8000
+
         services:
             postgres:
                 image: postgres
                 env:
-                    POSTGRES_PASSWORD: heritage2001
-                    POSTGRES_DB: shrinklink_test
-                    POSTGRES_PORT: 5432
-                    POSTGRES_HOST: postgres
+                    POSTGRES_PASSWORD: postgres
                 options: >-
                     --health-cmd pg_isready
                     --health-interval 10s
