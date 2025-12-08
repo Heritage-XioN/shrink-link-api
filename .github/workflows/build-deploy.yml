@@ -7,6 +7,9 @@ on:
         branches: ["main"]
 jobs:
     ubuntu-job:
+        environment:
+            name: testing
+        container: python:3.14-slim
         env:
             DB_HOSTNAME: postgres
             DB_PORT: 5432
