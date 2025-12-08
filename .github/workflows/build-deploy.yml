@@ -1,0 +1,54 @@
+name: Build and deploy shrinkLink api
+run-name: ${{ github.actor }} running production build for deployment
+on:
+    pull_request:
+        branches: ["main"]
+jobs:
+    ubuntu-job:
+        environment:
+            name: testing
+        env:
+            DB_HOSTNAME: ${{secrets.DB_HOSTNAME}}
+            DB_PORT: ${{secrets.DB_PORT}}
+            DB_PASSWORD: ${{secrets.DB_PASSWORD}}
+            DB_NAME: ${{secrets.DB_NAME}}
+            DB_USERNAME: ${{secrets.DB_USERNAME}}
+            DB_DRIVER: ${{secrets.DB_DRIVER}}
+            SECRET_KEY: ${{secrets.SECRET_KEY}}
+            ALGORITHM: ${{secrets.ALGORITHM}}
+            ACCESS_TOKEN_EXPIRE_MINUTES: ${{secrets.ACCESS_TOKEN_EXPIRE_MINUTES}}
+            BACKEND_URL: ${{secrets.BACKEND_URL}}
+        services:
+            postgres:
+                image: postgres
+                env:
+                    POSTGRES_PASSWORD: ${{secrets.DB_PASSWORD}}
+                    POSTGRES_DB: ${{secrets.DB_NAME}}_test
+                ports:
+                    - 5432:5432
+                options: >-
+                    --health-cmd pg_isready
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+                    
+        runs-on: ubuntu-latest
+        steps:
+            - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
+            - run: echo "This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+            - run: echo "on the branch ${{ github.ref }}, and repository ${{ github.repository }}."
+            - name: Check out repository code
+              uses: actions/checkout@v5
+            - run: echo "The ${{ github.repository }} repository has been cloned to the runner."
+            - name: install python version 3.14.0
+              uses: actions/setup-python@v6
+              with:
+                python-version: '3.14.0'
+            - name: update pip
+              run: python -m pip install --upgrade pip
+            - name: install dependencies from requirements.txt
+              run: pip install -r requirements.txt
+            - name: install pytest and run unit test
+              run: |
+                pip install pytest
+                pytest
