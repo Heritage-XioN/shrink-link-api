@@ -10,7 +10,7 @@ SQLModel.metadata.create_all(engine)
 
 app = FastAPI(
     title="shrinklink api",
-    description="the api for my shrinklink site",
+    description="the api for a url shortner site",
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc"
