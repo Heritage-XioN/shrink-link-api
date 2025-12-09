@@ -12,7 +12,7 @@ from app.schemas.user import Get_current_user
 
 
 
-DB_URL = f"{settings.DB_DRIVER}://{settings.DB_USERNAME}:{settings.DB_PASSWORD}@{settings.DB_HOSTNAME}:{settings.DB_PORT}/{settings.DB_NAME}"
+DB_URL = f"{settings.DB_DRIVER}://{settings.DB_USERNAME}:{settings.DB_PASSWORD}@{settings.DB_HOSTNAME}:{settings.DB_PORT}/{settings.TEST_DB_NAME}"
 engine = create_engine(DB_URL, pool_size=10, max_overflow=20, pool_pre_ping=True)
 
 @pytest.fixture
